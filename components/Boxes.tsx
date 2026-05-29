@@ -138,12 +138,18 @@ export default function Boxes() {
                       </div>
                       <div style={{ display:"flex", gap:8 }}>
                         <button onClick={() => handleAdd(box)}
-                          className={justAdded||inCart ? "btn-outline btn-green" : "btn-blue"}
-                          style={{ padding:"8px 14px", fontSize:12, borderRadius:100 }}>
+                          style={{ padding:"8px 16px", fontSize:12, fontWeight:700, borderRadius:100,
+                            border:"none", cursor:"pointer", fontFamily:"inherit",
+                            background: justAdded||inCart ? "#f0fdf4" : `linear-gradient(135deg,${box.gradientFrom},${box.gradientTo})`,
+                            color: justAdded||inCart ? "#16a34a" : "#fff",
+                            
+                            boxShadow: justAdded||inCart ? "none" : `0 4px 12px ${box.gradientFrom}44` }}>
                           {justAdded ? "✓ Added!" : inCart ? "✓ Added" : "+ Add"}
                         </button>
-                        <Link href={`/box/${box.id}`} className="btn-outline"
-                          style={{ padding:"8px 14px", fontSize:12, borderRadius:100 }}>
+                        <Link href={`/box/${box.id}`}
+                          style={{ padding:"8px 16px", fontSize:12, fontWeight:700, borderRadius:100,
+                            textDecoration:"none", background:"#eff6ff", color:"#1a4a8a",
+                            border:"1.5px solid rgba(37,99,235,.2)", display:"inline-flex", alignItems:"center" }}>
                           See inside →
                         </Link>
                       </div>

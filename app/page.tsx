@@ -2,6 +2,7 @@ import Nav from "@/components/Nav";
 import Hero from "@/components/Hero";
 import HowItWorks from "@/components/HowItWorks";
 import Boxes from "@/components/Boxes";
+import DishesTeaser from "@/components/DishesTeaser";
 import ExtrasSection from "@/components/ExtrasSection";
 import Freshness from "@/components/Freshness";
 import Why from "@/components/Why";
@@ -15,6 +16,7 @@ export default function Home() {
       <Hero />
       <HowItWorks />
       <Boxes />
+      <DishesTeaser />
       <ExtrasSection />
       <Freshness />
       <Why />

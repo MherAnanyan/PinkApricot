@@ -448,3 +448,28 @@ footer.site-footer .footer-inner {
   max-width: 1280px;
   margin: 0 auto;
 }
+
+/* ── Nav fix — always visible on white bg pages ── */
+nav.site-nav .nav-links a { color: rgba(255,255,255,.75); }
+nav.site-nav.scrolled .nav-links a { color: rgba(255,255,255,.75); }
+
+/* For light-bg pages (dishes, checkout) — nav is always dark */
+nav.site-nav.light .nav-logo .logo-name { color: #0b2545; }
+nav.site-nav.light .nav-links a { color: #334155; }
+nav.site-nav.light .nav-links a:hover { color: #2563eb; }
+nav.site-nav.light { background: rgba(255,255,255,.97) !important; backdrop-filter: blur(16px); box-shadow: 0 1px 0 #e2e8f0; }
+nav.site-nav.light .logo-sub { color: #94a3b8 !important; }
+nav.site-nav.light .cart-btn { background: #eff6ff; color: #2563eb; border-color: rgba(37,99,235,.2); }
+nav.site-nav.light .cart-btn.has-items { background: linear-gradient(135deg,#2563eb,#1a4a8a); color: #fff; }
+nav.site-nav.light .lang-switcher { background: #f1f5f9; border-color: #e2e8f0; }
+nav.site-nav.light .lang-btn { color: #94a3b8; }
+nav.site-nav.light .lang-btn.active { background: linear-gradient(135deg,#2563eb,#1a4a8a); color: #fff; }
+nav.site-nav.light .hamburger span { background: #0b2545; }
+
+/* Box card button fix */
+.btn-blue { display:inline-flex; align-items:center; justify-content:center; }
+.btn-outline { display:inline-flex; align-items:center; justify-content:center; }
+
+/* Dish card image zoom */
+.dish-img { transition: transform .4s ease; }
+.dish-card:hover .dish-img { transform: scale(1.06); }
