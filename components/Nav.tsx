@@ -10,87 +10,96 @@ export default function Nav() {
   const { lang, setLang } = useLang();
   const { count } = useCart();
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const isHome = pathname === "/";
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 40);
+    const fn = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, hash: string) => {
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
+
+  const handleNav = (e: React.MouseEvent<HTMLAnchorElement>, hash: string) => {
     e.preventDefault();
-    if (isHome) {
-      document.querySelector(hash)?.scrollIntoView({ behavior: "smooth" });
-    } else {
-      router.push(`/${hash}`);
-    }
+    setMobileOpen(false);
+    if (isHome) document.querySelector(hash)?.scrollIntoView({ behavior: "smooth" });
+    else router.push(`/${hash}`);
   };
 
   const links = [
-    { hash: "#how",    label: { en: "How it works", hy: "Ինչպես", ru: "Как работает" } },
-    { hash: "#boxes",  label: { en: "Our Boxes",    hy: "Արկղեր", ru: "Боксы" } },
-    { hash: "#extras", label: { en: "Extras",       hy: "Հավելումներ", ru: "Дополнения" } },
-    { hash: "#why",    label: { en: "Why us",       hy: "Ինչու", ru: "Почему мы" } },
+    { hash: "#boxes",  label: { en: "Our Boxes",    hy: "Արkghner",    ru: "Боксы" } },
+    { hash: "#how",    label: { en: "How it works", hy: "Inchpes",      ru: "Как работает" } },
+    { hash: "#extras", label: { en: "Add-ons",      hy: "Havaoum",     ru: "Дополнения" } },
+    { hash: "#why",    label: { en: "Why us",       hy: "Inchu",       ru: "Почему мы" } },
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300`}
-      style={{ background: scrolled ? "rgba(255,249,246,.97)" : "transparent", backdropFilter: scrolled ? "blur(12px)" : "none", boxShadow: scrolled ? "0 1px 20px rgba(244,63,94,.08)" : "none" }}>
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-full flex items-center justify-center text-xl shadow-lg group-hover:scale-110 transition-transform duration-200"
-            style={{ background: "linear-gradient(135deg, #f472b6, #f43f5e)" }}>🍑</div>
-          <span className="font-display text-xl font-bold" style={{ color: "#881337" }}>Pink Apricot</span>
+    <nav className={`site-nav${scrolled || mobileOpen ? " scrolled" : ""}`}
+      style={{ background: scrolled || mobileOpen ? undefined : "transparent" }}>
+      <div className="nav-inner">
+        <Link href="/" className="nav-logo">
+          <div className="logo-mark">🍑</div>
+          <div>
+            <div className="logo-name">Blue Apricot</div>
+            <div className="logo-sub">Yerevan</div>
+          </div>
         </Link>
 
-        <div className="hidden md:flex items-center gap-7">
+        <ul className="nav-links">
           {links.map(l => (
-            <a key={l.hash} href={isHome ? l.hash : `/${l.hash}`}
-              onClick={(e) => handleNavClick(e, l.hash)}
-              className="text-sm font-medium transition-colors cursor-pointer"
-              style={{ color: "#9f1239", opacity: .75 }}>
-              {l.label[lang]}
-            </a>
+            <li key={l.hash}>
+              <a href={isHome ? l.hash : `/${l.hash}`} onClick={e => handleNav(e, l.hash)}>
+                {l.label[lang]}
+              </a>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        <div className="flex items-center gap-3">
-          {/* lang switcher */}
-          <div className="flex gap-1 p-1 rounded-full" style={{ background: "#fff1f2", border: "1px solid #fecdd3" }}>
+        <div className="nav-right">
+          <div className="lang-switcher">
             {(["en","hy","ru"] as Lang[]).map(l => (
-              <button key={l} onClick={() => setLang(l)}
-                className="text-xs font-black px-3 py-1.5 rounded-full transition-all duration-200"
-                style={lang === l
-                  ? { background: "linear-gradient(135deg, #ec4899, #f43f5e)", color: "#ffffff" }
-                  : { color: "#f9a8d4" }}>
+              <button key={l} onClick={() => setLang(l)} className={`lang-btn${lang === l ? " active" : ""}`}>
                 {l.toUpperCase()}
               </button>
             ))}
           </div>
 
-          {/* cart button */}
-          <Link href="/checkout" className="relative flex items-center gap-2 font-bold px-4 py-2.5 rounded-full transition-all duration-200 hover:-translate-y-0.5"
-            style={{ background: count > 0 ? "linear-gradient(135deg, #ec4899, #f43f5e)" : "#fff1f2", color: count > 0 ? "#ffffff" : "#e11d48", border: count > 0 ? "none" : "2px solid #fecdd3", boxShadow: count > 0 ? "0 4px 16px rgba(244,63,94,.35)" : "none" }}>
-            <span className="text-lg">🛒</span>
-            {count > 0 && (
-              <span className="font-black text-sm">{count}</span>
-            )}
-            {count === 0 && (
-              <span className="hidden md:inline text-xs font-bold">
-                {lang === "en" ? "Basket" : lang === "hy" ? "Kalatag" : "Корзина"}
-              </span>
-            )}
+          <Link href="/checkout" className={`cart-btn${count > 0 ? " has-items" : ""}`}>
+            <span>🛒</span>
+            {count > 0 && <span>{count}</span>}
+            <span style={{ display:"none" }} className="cart-label">
+              {count === 0 ? (lang === "en" ? "Basket" : lang === "ru" ? "Корзина" : "Kalatag") : ""}
+            </span>
           </Link>
 
-          {/* order cta */}
-          <a href={isHome ? "#order" : "/#order"}
-            className="hidden md:block text-white text-sm font-black px-5 py-2.5 rounded-full shadow-lg hover:-translate-y-0.5 transition-all duration-200"
-            style={{ background: "linear-gradient(135deg, #ec4899, #f43f5e)", boxShadow: "0 8px 24px rgba(244,63,94,.35)" }}>
-            {lang === "en" ? "Order Now" : lang === "hy" ? "Պատvirer" : "Заказать"}
-          </a>
+          <button className="hamburger" onClick={() => setMobileOpen(p => !p)} aria-label="Menu">
+            <span style={{ width: mobileOpen ? 20 : 20, transform: mobileOpen ? "rotate(45deg) translate(4px,4px)" : "none" }} />
+            <span style={{ width: 14, transform: mobileOpen ? "scale(0)" : "none", opacity: mobileOpen ? 0 : 1 }} />
+            <span style={{ width: 20, transform: mobileOpen ? "rotate(-45deg) translate(4px,-4px)" : "none" }} />
+          </button>
+        </div>
+      </div>
+
+      <div className={`mobile-menu${mobileOpen ? " open" : ""}`}>
+        <div className="mobile-menu-inner">
+          {links.map(l => (
+            <a key={l.hash} href={isHome ? l.hash : `/${l.hash}`} onClick={e => handleNav(e, l.hash)}>
+              {l.label[lang]}
+            </a>
+          ))}
+          <div style={{ display:"flex", gap:8, padding:"12px 16px 0" }}>
+            {(["en","hy","ru"] as Lang[]).map(l => (
+              <button key={l} onClick={() => { setLang(l); setMobileOpen(false); }}
+                className={`lang-btn${lang === l ? " active" : ""}`}
+                style={{ flex:1, padding:"8px", borderRadius:8 }}>
+                {l.toUpperCase()}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </nav>

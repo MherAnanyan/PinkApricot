@@ -1,45 +1,61 @@
 "use client";
 import { useLang } from "./LangContext";
 import { t } from "@/lib/i18n";
+import ScrollReveal from "./ScrollReveal";
 
-const stepStyles = [
-  { icon: "📱", grad: "from-pink-400 to-rose-500", bg: "bg-pink-50" },
-  { icon: "🛒", grad: "from-violet-400 to-purple-600", bg: "bg-violet-50" },
-  { icon: "🚀", grad: "from-orange-400 to-amber-500", bg: "bg-orange-50" },
-  { icon: "👨‍🍳", grad: "from-emerald-400 to-teal-500", bg: "bg-emerald-50" },
+const STEPS = [
+  { icon:"📱", color:"#2563eb", bg:"#eff6ff" },
+  { icon:"🛒", color:"#ea580c", bg:"#fff7ed" },
+  { icon:"🚀", color:"#16a34a", bg:"#f0fdf4" },
+  { icon:"👨‍🍳", color:"#9333ea", bg:"#faf5ff" },
 ];
 
 export default function HowItWorks() {
   const { lang } = useLang();
   return (
-    <section id="how" className="py-28 bg-white relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 70% 40% at 50% 0%, rgba(251,207,232,.25), transparent)" }} />
+    <section id="how" style={{ padding:"120px 0", background:"#ffffff", position:"relative", overflow:"hidden" }}>
+      <div style={{ position:"absolute", inset:0, pointerEvents:"none",
+        background:"radial-gradient(ellipse 60% 40% at 50% 0%, rgba(37,99,235,.04), transparent)" }} />
 
-      <div className="max-w-7xl mx-auto px-6 relative">
-        <div className="text-center mb-16">
-          <span className="inline-block text-xs font-black uppercase tracking-widest text-pink-500 bg-pink-50 border border-pink-100 px-4 py-2 rounded-full mb-5">
-            {t.how.tag[lang]}
-          </span>
-          <h2 className="font-display text-5xl font-black text-rose-950">{t.how.title[lang]}</h2>
-        </div>
+      <div style={{ maxWidth:1280, margin:"0 auto", padding:"0 24px" }}>
+        <ScrollReveal>
+          <div style={{ textAlign:"center", marginBottom:64 }}>
+            <span style={{ display:"inline-block", fontSize:11, fontWeight:700, textTransform:"uppercase",
+              letterSpacing:"0.1em", padding:"6px 16px", borderRadius:100, marginBottom:20,
+              background:"#dbeafe", color:"#1a4a8a", border:"1px solid rgba(37,99,235,.2)" }}>
+              {t.how.tag[lang]}
+            </span>
+            <h2 className="font-display" style={{ fontWeight:900, color:"#0b2545",
+              fontSize:"clamp(32px,4.5vw,56px)" }}>
+              {t.how.title[lang]}
+            </h2>
+          </div>
+        </ScrollReveal>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit, minmax(240px,1fr))", gap:24 }}>
           {t.how.steps.map((step, i) => (
-            <div key={i} className={`relative ${stepStyles[i].bg} rounded-3xl p-7 border border-pink-100 hover:shadow-2xl hover:shadow-pink-100 hover:-translate-y-2 transition-all duration-300 group`}>
-              {/* connector line */}
-              {i < 3 && (
-                <div className="hidden lg:block absolute top-12 left-full w-6 h-0.5 bg-gradient-to-r from-pink-300 to-transparent z-10" />
-              )}
-              <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${stepStyles[i].grad} flex items-center justify-center text-3xl shadow-lg mb-5 group-hover:scale-110 transition-transform duration-200`}>
-                {stepStyles[i].icon}
+            <ScrollReveal key={i} delay={i * 90}>
+              <div style={{ position:"relative", borderRadius:24, padding:28, height:"100%",
+                background: STEPS[i].bg, border:"1px solid #e2e8f0",
+                transition:"transform .3s, box-shadow .3s", cursor:"default" }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.transform="translateY(-6px)"; el.style.boxShadow="0 24px 60px rgba(11,37,69,.1)"; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.transform="translateY(0)"; el.style.boxShadow="none"; }}>
+                {/* Step icon */}
+                <div style={{ width:64, height:64, borderRadius:18, display:"flex", alignItems:"center",
+                  justifyContent:"center", fontSize:28, marginBottom:20,
+                  background: STEPS[i].color, boxShadow:`0 8px 24px ${STEPS[i].color}44` }}>
+                  {STEPS[i].icon}
+                </div>
+                {/* Step number */}
+                <div style={{ width:28, height:28, borderRadius:"50%", display:"flex", alignItems:"center",
+                  justifyContent:"center", fontSize:12, fontWeight:900, marginBottom:16, color:"#ffffff",
+                  background: STEPS[i].color }}>
+                  {i + 1}
+                </div>
+                <h3 style={{ fontWeight:700, fontSize:16, marginBottom:8, color:"#0b2545" }}>{step.title[lang]}</h3>
+                <p style={{ fontSize:14, lineHeight:1.65, fontWeight:300, color:"#64748b" }}>{step.desc[lang]}</p>
               </div>
-              <div className="w-8 h-8 rounded-full bg-white border-2 border-pink-200 text-pink-500 font-black text-sm flex items-center justify-center mb-4 shadow-sm">
-                {i + 1}
-              </div>
-              <h3 className="font-bold text-rose-900 text-base mb-2">{step.title[lang]}</h3>
-              <p className="text-rose-700 text-sm leading-relaxed font-light opacity-70">{step.desc[lang]}</p>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>
